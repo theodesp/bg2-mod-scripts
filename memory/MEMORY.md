@@ -1,0 +1,1 @@
+- [EET ARM Mac Fix](eet_arm_mac_fix.md) — Fix for EET mod installation on Apple Silicon - copy weidu to eet/bin/osx/
