@@ -331,8 +331,20 @@ install_component() {
     echo -e "${YELLOW}Installing: ${description}${NC}"
     echo -e "  TP2: ${tp2_file}, Component: ${component}, Language: ${language}"
 
-    if ./weidu --language "${language}" --force-install "${component}" "${tp2_file}" --no-exit-pause; then
-        echo -e "${GREEN}✓ Installed successfully${NC}"
+    # Capture output and check for success/warnings
+    local output
+    output=$(./weidu --language "${language}" --force-install "${component}" "${tp2_file}" --no-exit-pause 2>&1)
+    local exit_code=$?
+
+    echo "$output"
+
+    # Check if installation succeeded (with or without warnings)
+    if echo "$output" | grep -q "SUCCESSFULLY INSTALLED\|INSTALLED WITH WARNINGS"; then
+        if echo "$output" | grep -q "INSTALLED WITH WARNINGS"; then
+            echo -e "${YELLOW}⚠ Installed with warnings${NC}"
+        else
+            echo -e "${GREEN}✓ Installed successfully${NC}"
+        fi
     else
         echo -e "${RED}✗ Installation failed${NC}"
         echo -e "${RED}Check the log above for errors${NC}"
